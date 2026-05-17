@@ -10,18 +10,57 @@
 
 using namespace std;
 
-int safeIntInput() {
-    int x;
+void searchRecipes(const vector<Recipe*>& recipes) {
 
-    while (true) {
-        std::cin >> x;
+    if (recipes.empty()) {
+        cout << "No recipes available." << endl;
+        return;
+    }
 
-        if (!std::cin.fail()) {
-            return x;
+    string keyword;
+    cout << "Enter keyword: ";
+    getline(cin, keyword);
+
+    bool found = false;
+
+    for (Recipe* recipe : recipes) {
+        if (recipe->getName().find(keyword) != string::npos) {
+            recipe->printInfo();
+            cout << endl;
+            found = true;
         }
+    }
 
-        std::cin.clear();
-        std::cout << "Invalid input. Try again: ";
+    if (!found) {
+        cout << "No matching recipes found." << endl;
+    }
+}
+
+void filterByType(const vector<Recipe*>& recipes) {
+
+    cout << "Choose type:" << endl;
+    cout << "1. Dessert" << endl;
+    cout << "2. Healthy" << endl;
+    cout << "3. Main Course" << endl;
+
+    int type;
+    cin >> type;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    for (Recipe* recipe : recipes) {
+
+        if (type == 1 && dynamic_cast<DessertRecipe*>(recipe)) {
+            recipe->printInfo();
+            cout << endl;
+        }
+        else if (type == 2 && dynamic_cast<HealthyRecipe*>(recipe)) {
+            recipe->printInfo();
+            cout << endl;
+        }
+        else if (type == 3 && dynamic_cast<MainCourseRecipe*>(recipe)) {
+            recipe->printInfo();
+            cout << endl;
+        }
     }
 }
 
@@ -31,6 +70,8 @@ void showMenu() {
     cout << "2. Show Recipes" << endl;
     cout << "3. Update Recipe" << endl;
     cout << "4. Delete Recipe" << endl;
+    cout << "5. Search Recipe" << endl;
+    cout << "6. Filter by Type" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -80,7 +121,7 @@ Recipe* createRecipe() {
     int ingredientCount;
 
     cout << "How many ingredients: ";
-    ingredientCount = safeIntInput();
+    cin >> ingredientCount;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     for (int i = 0; i < ingredientCount; i++) {
@@ -96,7 +137,6 @@ Recipe* createRecipe() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         Ingredient ingredient(ingredientName, quantity);
-
         recipe->addIngredient(ingredient);
     }
 
@@ -115,7 +155,7 @@ void updateRecipe(vector<Recipe*>& recipes) {
     int index;
 
     cout << "Choose recipe number to update: ";
-    index = safeIntInput();
+    cin >> index;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     if (index < 1 || index > recipes.size()) {
@@ -131,13 +171,12 @@ void updateRecipe(vector<Recipe*>& recipes) {
     getline(cin, newName);
 
     recipe->setName(newName);
-
     recipe->clearIngredients();
 
     int ingredientCount;
 
     cout << "How many ingredients: ";
-    ingredientCount = safeIntInput();
+    cin >> ingredientCount;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     for (int i = 0; i < ingredientCount; i++) {
@@ -153,7 +192,6 @@ void updateRecipe(vector<Recipe*>& recipes) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         Ingredient ingredient(ingredientName, quantity);
-
         recipe->addIngredient(ingredient);
     }
 
@@ -172,7 +210,7 @@ void deleteRecipe(vector<Recipe*>& recipes) {
     int index;
 
     cout << "Choose recipe number to delete: ";
-    index = safeIntInput();
+    cin >> index;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     if (index < 1 || index > recipes.size()) {
@@ -181,7 +219,6 @@ void deleteRecipe(vector<Recipe*>& recipes) {
     }
 
     delete recipes[index - 1];
-
     recipes.erase(recipes.begin() + (index - 1));
 
     cout << "Recipe deleted successfully." << endl;
@@ -197,28 +234,30 @@ int main() {
 
         showMenu();
 
-        choice = safeIntInput();;
+        cin >> choice;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice == 1) {
 
             Recipe* recipe = createRecipe();
-
             recipes.push_back(recipe);
 
             cout << "Recipe added successfully." << endl;
         }
-
         else if (choice == 2) {
             showRecipes(recipes);
         }
-
         else if (choice == 3) {
             updateRecipe(recipes);
         }
-
         else if (choice == 4) {
             deleteRecipe(recipes);
+        }
+        else if (choice == 5) {
+            searchRecipes(recipes);
+        }
+        else if (choice == 6) {
+            filterByType(recipes);
         }
 
     } while (choice != 0);
