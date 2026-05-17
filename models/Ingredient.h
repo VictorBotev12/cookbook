@@ -10,4 +10,10 @@ private:
 public:
     Ingredient();
     Ingredient(std::string name, double quantity);
+
+    std::string getName() const;
+    double getQuantity() const;
+
+    void setName(std::string name);
+    void setQuantity(double quantity);
 };
