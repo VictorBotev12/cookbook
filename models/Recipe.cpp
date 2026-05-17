@@ -13,6 +13,10 @@ std::string Recipe::getName() const {
     return name;
 }
 
+const std::vector<Ingredient>& Recipe::getIngredients() const {
+    return ingredients;
+}
+
 void Recipe::setName(std::string name) {
     this->name = name;
 }

@@ -16,6 +16,7 @@ public:
     Recipe(std::string name);
 
     std::string getName() const;
+    const std::vector<Ingredient>& getIngredients() const;
 
     void setName(std::string name);
 
