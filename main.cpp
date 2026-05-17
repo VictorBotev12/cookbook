@@ -7,8 +7,11 @@
 #include "models/HealthyRecipe.h"
 #include "models/MainCourseRecipe.h"
 #include "models/Ingredient.h"
+#include "plans/WeeklyPlan.h"
 
 using namespace std;
+
+WeeklyPlan weeklyPlan;
 
 void searchRecipes(const vector<Recipe*>& recipes) {
 
@@ -72,6 +75,8 @@ void showMenu() {
     cout << "4. Delete Recipe" << endl;
     cout << "5. Search Recipe" << endl;
     cout << "6. Filter by Type" << endl;
+    cout << "7. Add Recipe to Weekly Plan" << endl;
+    cout << "8. Show Weekly Plan" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -108,15 +113,9 @@ Recipe* createRecipe() {
 
     Recipe* recipe = nullptr;
 
-    if (type == 1) {
-        recipe = new DessertRecipe(recipeName);
-    }
-    else if (type == 2) {
-        recipe = new HealthyRecipe(recipeName);
-    }
-    else {
-        recipe = new MainCourseRecipe(recipeName);
-    }
+    if (type == 1) recipe = new DessertRecipe(recipeName);
+    else if (type == 2) recipe = new HealthyRecipe(recipeName);
+    else recipe = new MainCourseRecipe(recipeName);
 
     int ingredientCount;
 
@@ -136,8 +135,7 @@ Recipe* createRecipe() {
         cin >> quantity;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        Ingredient ingredient(ingredientName, quantity);
-        recipe->addIngredient(ingredient);
+        recipe->addIngredient(Ingredient(ingredientName, quantity));
     }
 
     return recipe;
@@ -153,7 +151,6 @@ void updateRecipe(vector<Recipe*>& recipes) {
     showRecipes(recipes);
 
     int index;
-
     cout << "Choose recipe number to update: ";
     cin >> index;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -166,7 +163,6 @@ void updateRecipe(vector<Recipe*>& recipes) {
     Recipe* recipe = recipes[index - 1];
 
     string newName;
-
     cout << "New recipe name: ";
     getline(cin, newName);
 
@@ -191,8 +187,7 @@ void updateRecipe(vector<Recipe*>& recipes) {
         cin >> quantity;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        Ingredient ingredient(ingredientName, quantity);
-        recipe->addIngredient(ingredient);
+        recipe->addIngredient(Ingredient(ingredientName, quantity));
     }
 
     cout << "Recipe updated successfully." << endl;
@@ -208,7 +203,6 @@ void deleteRecipe(vector<Recipe*>& recipes) {
     showRecipes(recipes);
 
     int index;
-
     cout << "Choose recipe number to delete: ";
     cin >> index;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -219,7 +213,7 @@ void deleteRecipe(vector<Recipe*>& recipes) {
     }
 
     delete recipes[index - 1];
-    recipes.erase(recipes.begin() + (index - 1));
+    recipes.erase(recipes.begin() + index - 1);
 
     cout << "Recipe deleted successfully." << endl;
 }
@@ -238,10 +232,7 @@ int main() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice == 1) {
-
-            Recipe* recipe = createRecipe();
-            recipes.push_back(recipe);
-
+            recipes.push_back(createRecipe());
             cout << "Recipe added successfully." << endl;
         }
         else if (choice == 2) {
@@ -259,11 +250,32 @@ int main() {
         else if (choice == 6) {
             filterByType(recipes);
         }
+        else if (choice == 7) {
+
+            showRecipes(recipes);
+
+            int index;
+            cout << "Choose recipe: ";
+            cin >> index;
+
+            int day;
+            cout << "Choose day (1-7): ";
+            cin >> day;
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (index >= 1 && index <= recipes.size()) {
+                weeklyPlan.addRecipeToDay(day - 1, recipes[index - 1]);
+            }
+        }
+        else if (choice == 8) {
+            weeklyPlan.showPlan();
+        }
 
     } while (choice != 0);
 
-    for (Recipe* recipe : recipes) {
-        delete recipe;
+    for (Recipe* r : recipes) {
+        delete r;
     }
 
     return 0;
