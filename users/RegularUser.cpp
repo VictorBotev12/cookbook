@@ -1,6 +1,15 @@
 #include "RegularUser.h"
 #include <iostream>
 
-void RegularUser::showPermissions() {
-    std::cout << "Regular user permissions" << std::endl;
+RegularUser::RegularUser(const std::string& username)
+    : User(username) {
+}
+
+void RegularUser::showPermissions() const {
+
+    std::cout << "Regular user: limited access" << std::endl;
+}
+
+std::string RegularUser::getRole() const {
+    return "Regular";
 }

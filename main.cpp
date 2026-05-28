@@ -14,6 +14,8 @@
 
 #include "shopping/AutoShoppingList.h"
 
+#include "users/AdminUser.h"
+#include "users/RegularUser.h"
 
 using namespace std;
 
@@ -84,10 +86,11 @@ Recipe* createRecipe() {
 
         cout << "Quantity: ";
         cin >> quantity;
-
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        recipe->addIngredient(Ingredient(ingredientName, quantity));
+        recipe->addIngredient(
+            Ingredient(ingredientName, quantity)
+        );
     }
 
     int stepCount;
@@ -180,6 +183,12 @@ void showMenu() {
 
 int main() {
 
+    AdminUser admin("admin");
+    RegularUser user("user");
+
+    admin.showPermissions();
+    user.showPermissions();
+
     vector<Recipe*> recipes;
 
     int choice;
@@ -193,9 +202,7 @@ int main() {
 
         if (choice == 1) {
 
-            recipes.push_back(
-                createRecipe()
-            );
+            recipes.push_back(createRecipe());
 
             cout << "Recipe added." << endl;
         }
@@ -219,47 +226,47 @@ int main() {
         }
         else if (choice == 6) {
 
-    if (recipes.empty()) {
+            if (recipes.empty()) {
 
-        cout << "No recipes available." << endl;
-    }
-    else {
+                cout << "No recipes available." << endl;
+            }
+            else {
 
-        showRecipes(recipes);
+                showRecipes(recipes);
 
-        int recipeIndex;
-        int day;
+                int recipeIndex;
+                int day;
 
-        cout << "Choose recipe number: ";
-        cin >> recipeIndex;
+                cout << "Choose recipe number: ";
+                cin >> recipeIndex;
 
-        cout << "Choose day (1-7): ";
-        cin >> day;
+                cout << "Choose day (1-7): ";
+                cin >> day;
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        if (recipeIndex >= 1 &&
-            recipeIndex <= recipes.size() &&
-            day >= 1 &&
-            day <= 7) {
+                if (recipeIndex >= 1 &&
+                    recipeIndex <= recipes.size() &&
+                    day >= 1 &&
+                    day <= 7) {
 
-            weeklyPlan.addRecipeToDay(
-                day - 1,
-                recipes[recipeIndex - 1]
-            );
+                    weeklyPlan.addRecipeToDay(
+                        day - 1,
+                        recipes[recipeIndex - 1]
+                    );
 
-            cout << "Recipe added to weekly plan." << endl;
+                    cout << "Recipe added to weekly plan." << endl;
+                }
+                else {
+
+                    cout << "Invalid input." << endl;
+                }
+            }
         }
-        else {
+        else if (choice == 7) {
 
-            cout << "Invalid input." << endl;
+            weeklyPlan.showPlan();
         }
-    }
-    }
-    else if (choice == 7) {
-
-        weeklyPlan.showPlan();
-    }
 
     } while (choice != 0);
 
