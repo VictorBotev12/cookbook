@@ -5,6 +5,7 @@
 
 #include "Ingredient.h"
 #include "Step.h"
+#include "Rating.h"
 
 class Recipe {
 
@@ -12,6 +13,7 @@ protected:
     std::string name;
     std::vector<Ingredient> ingredients;
     std::vector<Step*> steps;
+    Rating* rating;
 
 public:
     Recipe(const std::string& name);
@@ -35,4 +37,8 @@ public:
     virtual void printInfo() const = 0;
 
     virtual double calculateCalories() const = 0;
+
+    void rate(int stars);
+    
+    double getRating() const;
 };

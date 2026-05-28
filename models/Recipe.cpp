@@ -1,8 +1,11 @@
 #include "Recipe.h"
+#include "StarRating.h"
 #include <iostream>
 
 Recipe::Recipe(const std::string& name)
     : name(name) {
+
+    rating = new StarRating();
 }
 
 Recipe::~Recipe() {
@@ -10,6 +13,8 @@ Recipe::~Recipe() {
     for (Step* step : steps) {
         delete step;
     }
+
+    delete rating;
 }
 
 void Recipe::setName(const std::string& name) {
@@ -43,4 +48,12 @@ void Recipe::showSteps() const {
     for (Step* step : steps) {
         step->execute();
     }
+}
+
+void Recipe::rate(int stars) {
+    rating->addRating(stars);
+}
+
+double Recipe::getRating() const {
+    return rating->getAverage();
 }

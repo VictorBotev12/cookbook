@@ -10,6 +10,8 @@ void DessertRecipe::printInfo() const {
     std::cout
         << "[Dessert] "
         << name
+        << " | Rating: "
+        << getRating()
         << std::endl;
 }
 

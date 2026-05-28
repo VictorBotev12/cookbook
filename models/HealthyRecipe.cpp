@@ -10,6 +10,8 @@ void HealthyRecipe::printInfo() const {
     std::cout
         << "[Healthy] "
         << name
+        << " | Rating: "
+        << getRating()
         << std::endl;
 }
 

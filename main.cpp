@@ -178,6 +178,7 @@ void showMenu() {
     cout << "5. Show Shopping List" << endl;
     cout << "6. Add Recipe to Weekly Plan" << endl;
     cout << "7. Show Weekly Plan" << endl;
+    cout << "8. Rate Recipe" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -267,6 +268,38 @@ int main() {
 
             weeklyPlan.showPlan();
         }
+            else if (choice == 8) {
+
+        if (recipes.empty()) {
+            cout << "No recipes available." << endl;
+        }
+        else {
+
+            showRecipes(recipes);
+
+            int index;
+            int stars;
+
+            cout << "Choose recipe number: ";
+            cin >> index;
+
+            cout << "Stars (1-5): ";
+            cin >> stars;
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (index >= 1 &&
+                index <= recipes.size()) {
+
+                recipes[index - 1]->rate(stars);
+
+                cout << "Recipe rated." << endl;
+            }
+            else {
+                cout << "Invalid input." << endl;
+            }
+        }
+    }
 
     } while (choice != 0);
 

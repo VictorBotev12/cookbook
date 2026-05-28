@@ -10,6 +10,8 @@ void MainCourseRecipe::printInfo() const {
     std::cout
         << "[Main Course] "
         << name
+        << " | Rating: "
+        << getRating()
         << std::endl;
 }
 
