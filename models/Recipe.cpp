@@ -1,24 +1,23 @@
 #include "Recipe.h"
 #include <iostream>
 
-Recipe::Recipe() {
-    name = "";
+Recipe::Recipe(const std::string& name)
+    : name(name) {
 }
 
-Recipe::Recipe(std::string name) {
+Recipe::~Recipe() {
+
+    for (Step* step : steps) {
+        delete step;
+    }
+}
+
+void Recipe::setName(const std::string& name) {
     this->name = name;
 }
 
 std::string Recipe::getName() const {
     return name;
-}
-
-const std::vector<Ingredient>& Recipe::getIngredients() const {
-    return ingredients;
-}
-
-void Recipe::setName(std::string name) {
-    this->name = name;
 }
 
 void Recipe::addIngredient(const Ingredient& ingredient) {
@@ -29,21 +28,19 @@ void Recipe::clearIngredients() {
     ingredients.clear();
 }
 
-void Recipe::printInfo() {
-    std::cout << "Recipe: " << name << std::endl;
-
-    std::cout << "Ingredients:" << std::endl;
-
-    for (const Ingredient& ingredient : ingredients) {
-        std::cout
-            << "- "
-            << ingredient.getName()
-            << " : "
-            << ingredient.getQuantity()
-            << std::endl;
-    }
+const std::vector<Ingredient>& Recipe::getIngredients() const {
+    return ingredients;
 }
 
-double Recipe::calculateCalories() {
-    return 0;
+void Recipe::addStep(Step* step) {
+    steps.push_back(step);
+}
+
+void Recipe::showSteps() const {
+
+    std::cout << "Steps:" << std::endl;
+
+    for (Step* step : steps) {
+        step->execute();
+    }
 }

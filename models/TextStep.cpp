@@ -1,6 +1,10 @@
 #include "TextStep.h"
 #include <iostream>
 
-void TextStep::execute() {
-    std::cout << "Executing text step" << std::endl;
+TextStep::TextStep(const std::string& text)
+    : text(text) {
+}
+
+void TextStep::execute() const {
+    std::cout << text << std::endl;
 }

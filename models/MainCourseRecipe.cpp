@@ -1,9 +1,19 @@
 #include "MainCourseRecipe.h"
 #include <iostream>
 
-MainCourseRecipe::MainCourseRecipe(std::string name)
-    : Recipe(name) {}
+MainCourseRecipe::MainCourseRecipe(const std::string& name)
+    : Recipe(name) {
+}
 
-void MainCourseRecipe::printInfo() {
-    std::cout << "Main Course Recipe: " << name << std::endl;
+void MainCourseRecipe::printInfo() const {
+
+    std::cout
+        << "[Main Course] "
+        << name
+        << std::endl;
+}
+
+double MainCourseRecipe::calculateCalories() const {
+
+    return ingredients.size() * 80;
 }

@@ -6,84 +6,19 @@
 #include "models/DessertRecipe.h"
 #include "models/HealthyRecipe.h"
 #include "models/MainCourseRecipe.h"
-#include "models/Ingredient.h"
+
+#include "models/TextStep.h"
+#include "models/TimedStep.h"
 
 #include "plans/WeeklyPlan.h"
+
 #include "shopping/AutoShoppingList.h"
+
 
 using namespace std;
 
 WeeklyPlan weeklyPlan;
 AutoShoppingList shoppingList;
-
-void searchRecipes(const vector<Recipe*>& recipes) {
-
-    if (recipes.empty()) {
-        cout << "No recipes available." << endl;
-        return;
-    }
-
-    string keyword;
-    cout << "Enter keyword: ";
-    getline(cin, keyword);
-
-    bool found = false;
-
-    for (Recipe* recipe : recipes) {
-        if (recipe->getName().find(keyword) != string::npos) {
-            recipe->printInfo();
-            cout << endl;
-            found = true;
-        }
-    }
-
-    if (!found) {
-        cout << "No matching recipes found." << endl;
-    }
-}
-
-void filterByType(const vector<Recipe*>& recipes) {
-
-    cout << "Choose type:" << endl;
-    cout << "1. Dessert" << endl;
-    cout << "2. Healthy" << endl;
-    cout << "3. Main Course" << endl;
-
-    int type;
-    cin >> type;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    for (Recipe* recipe : recipes) {
-
-        if (type == 1 && dynamic_cast<DessertRecipe*>(recipe)) {
-            recipe->printInfo();
-            cout << endl;
-        }
-        else if (type == 2 && dynamic_cast<HealthyRecipe*>(recipe)) {
-            recipe->printInfo();
-            cout << endl;
-        }
-        else if (type == 3 && dynamic_cast<MainCourseRecipe*>(recipe)) {
-            recipe->printInfo();
-            cout << endl;
-        }
-    }
-}
-
-void showMenu() {
-    cout << endl;
-    cout << "1. Add Recipe" << endl;
-    cout << "2. Show Recipes" << endl;
-    cout << "3. Update Recipe" << endl;
-    cout << "4. Delete Recipe" << endl;
-    cout << "5. Search Recipe" << endl;
-    cout << "6. Filter by Type" << endl;
-    cout << "7. Add Recipe to Weekly Plan" << endl;
-    cout << "8. Show Weekly Plan" << endl;
-    cout << "9. Generate Shopping List" << endl;
-    cout << "10. Show Shopping List" << endl;
-    cout << "0. Exit" << endl;
-}
 
 void showRecipes(const vector<Recipe*>& recipes) {
 
@@ -93,8 +28,13 @@ void showRecipes(const vector<Recipe*>& recipes) {
     }
 
     for (int i = 0; i < recipes.size(); i++) {
+
         cout << i + 1 << ". ";
+
         recipes[i]->printInfo();
+
+        recipes[i]->showSteps();
+
         cout << endl;
     }
 }
@@ -118,109 +58,124 @@ Recipe* createRecipe() {
 
     Recipe* recipe;
 
-    if (type == 1) recipe = new DessertRecipe(name);
-    else if (type == 2) recipe = new HealthyRecipe(name);
-    else recipe = new MainCourseRecipe(name);
+    if (type == 1) {
+        recipe = new DessertRecipe(name);
+    }
+    else if (type == 2) {
+        recipe = new HealthyRecipe(name);
+    }
+    else {
+        recipe = new MainCourseRecipe(name);
+    }
 
-    int count;
+    int ingredientCount;
 
     cout << "How many ingredients: ";
-    cin >> count;
+    cin >> ingredientCount;
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < ingredientCount; i++) {
 
-        string ingName;
-        double qty;
+        string ingredientName;
+        double quantity;
 
         cout << "Ingredient name: ";
-        getline(cin, ingName);
+        getline(cin, ingredientName);
 
         cout << "Quantity: ";
-        cin >> qty;
+        cin >> quantity;
+
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        recipe->addIngredient(Ingredient(ingName, qty));
+        recipe->addIngredient(Ingredient(ingredientName, quantity));
+    }
+
+    int stepCount;
+
+    cout << "How many steps: ";
+    cin >> stepCount;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    for (int i = 0; i < stepCount; i++) {
+
+        int stepType;
+
+        cout << "1. Text Step" << endl;
+        cout << "2. Timed Step" << endl;
+
+        cin >> stepType;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        string text;
+
+        cout << "Step text: ";
+        getline(cin, text);
+
+        if (stepType == 1) {
+
+            recipe->addStep(
+                new TextStep(text)
+            );
+        }
+        else {
+
+            int minutes;
+
+            cout << "Minutes: ";
+            cin >> minutes;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            recipe->addStep(
+                new TimedStep(text, minutes)
+            );
+        }
     }
 
     return recipe;
 }
 
-void updateRecipe(vector<Recipe*>& recipes) {
+void searchRecipes(const vector<Recipe*>& recipes) {
 
-    if (recipes.empty()) {
-        cout << "No recipes available." << endl;
-        return;
+    string ingredient;
+
+    cout << "Enter ingredient name: ";
+    getline(cin, ingredient);
+
+    bool found = false;
+
+    for (Recipe* recipe : recipes) {
+
+        for (const Ingredient& ing : recipe->getIngredients()) {
+
+            if (ing.getName() == ingredient) {
+
+                recipe->printInfo();
+                recipe->showSteps();
+
+                cout << endl;
+
+                found = true;
+            }
+        }
     }
 
-    showRecipes(recipes);
-
-    int index;
-    cout << "Choose recipe number to update: ";
-    cin >> index;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    if (index < 1 || index > recipes.size()) {
-        cout << "Invalid index." << endl;
-        return;
+    if (!found) {
+        cout << "No recipes found." << endl;
     }
-
-    Recipe* recipe = recipes[index - 1];
-
-    string newName;
-    cout << "New name: ";
-    getline(cin, newName);
-
-    recipe->setName(newName);
-    recipe->clearIngredients();
-
-    int count;
-
-    cout << "How many ingredients: ";
-    cin >> count;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    for (int i = 0; i < count; i++) {
-
-        string ingName;
-        double qty;
-
-        cout << "Ingredient name: ";
-        getline(cin, ingName);
-
-        cout << "Quantity: ";
-        cin >> qty;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        recipe->addIngredient(Ingredient(ingName, qty));
-    }
-
-    cout << "Updated successfully." << endl;
 }
 
-void deleteRecipe(vector<Recipe*>& recipes) {
+void showMenu() {
 
-    if (recipes.empty()) {
-        cout << "No recipes available." << endl;
-        return;
-    }
+    cout << endl;
 
-    showRecipes(recipes);
-
-    int index;
-    cout << "Choose recipe number to delete: ";
-    cin >> index;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    if (index < 1 || index > recipes.size()) {
-        cout << "Invalid index." << endl;
-        return;
-    }
-
-    delete recipes[index - 1];
-    recipes.erase(recipes.begin() + index - 1);
-
-    cout << "Deleted successfully." << endl;
+    cout << "1. Add Recipe" << endl;
+    cout << "2. Show Recipes" << endl;
+    cout << "3. Search by Ingredient" << endl;
+    cout << "4. Generate Shopping List" << endl;
+    cout << "5. Show Shopping List" << endl;
+    cout << "6. Add Recipe to Weekly Plan" << endl;
+    cout << "7. Show Weekly Plan" << endl;
+    cout << "0. Exit" << endl;
 }
 
 int main() {
@@ -237,56 +192,79 @@ int main() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice == 1) {
-            recipes.push_back(createRecipe());
+
+            recipes.push_back(
+                createRecipe()
+            );
+
+            cout << "Recipe added." << endl;
         }
         else if (choice == 2) {
+
             showRecipes(recipes);
         }
         else if (choice == 3) {
-            updateRecipe(recipes);
-        }
-        else if (choice == 4) {
-            deleteRecipe(recipes);
-        }
-        else if (choice == 5) {
+
             searchRecipes(recipes);
         }
-        else if (choice == 6) {
-            filterByType(recipes);
-        }
-        else if (choice == 7) {
+        else if (choice == 4) {
 
-            showRecipes(recipes);
-
-            int index, day;
-
-            cout << "Choose recipe: ";
-            cin >> index;
-
-            cout << "Choose day (1-7): ";
-            cin >> day;
-
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            if (index >= 1 && index <= recipes.size()) {
-                weeklyPlan.addRecipeToDay(day - 1, recipes[index - 1]);
-            }
-        }
-        else if (choice == 8) {
-            weeklyPlan.showPlan();
-        }
-        else if (choice == 9) {
             shoppingList.generateList(recipes);
+
             cout << "Shopping list generated." << endl;
         }
-        else if (choice == 10) {
+        else if (choice == 5) {
+
             shoppingList.showList();
         }
+        else if (choice == 6) {
+
+    if (recipes.empty()) {
+
+        cout << "No recipes available." << endl;
+    }
+    else {
+
+        showRecipes(recipes);
+
+        int recipeIndex;
+        int day;
+
+        cout << "Choose recipe number: ";
+        cin >> recipeIndex;
+
+        cout << "Choose day (1-7): ";
+        cin >> day;
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (recipeIndex >= 1 &&
+            recipeIndex <= recipes.size() &&
+            day >= 1 &&
+            day <= 7) {
+
+            weeklyPlan.addRecipeToDay(
+                day - 1,
+                recipes[recipeIndex - 1]
+            );
+
+            cout << "Recipe added to weekly plan." << endl;
+        }
+        else {
+
+            cout << "Invalid input." << endl;
+        }
+    }
+    }
+    else if (choice == 7) {
+
+        weeklyPlan.showPlan();
+    }
 
     } while (choice != 0);
 
-    for (Recipe* r : recipes) {
-        delete r;
+    for (Recipe* recipe : recipes) {
+        delete recipe;
     }
 
     return 0;

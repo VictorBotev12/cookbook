@@ -3,8 +3,11 @@
 #include "Recipe.h"
 
 class MainCourseRecipe : public Recipe {
-public:
-    MainCourseRecipe(std::string name);
 
-    void printInfo() override;
+public:
+    MainCourseRecipe(const std::string& name);
+
+    void printInfo() const override;
+
+    double calculateCalories() const override;
 };

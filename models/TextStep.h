@@ -1,8 +1,15 @@
 #pragma once
 
 #include "Step.h"
+#include <string>
 
 class TextStep : public Step {
+
+private:
+    std::string text;
+
 public:
-    void execute() override;
+    TextStep(const std::string& text);
+
+    void execute() const override;
 };

@@ -1,9 +1,19 @@
 #include "DessertRecipe.h"
 #include <iostream>
 
-DessertRecipe::DessertRecipe(std::string name)
-    : Recipe(name) {}
+DessertRecipe::DessertRecipe(const std::string& name)
+    : Recipe(name) {
+}
 
-void DessertRecipe::printInfo() {
-    std::cout << "Dessert Recipe: " << name << std::endl;
+void DessertRecipe::printInfo() const {
+
+    std::cout
+        << "[Dessert] "
+        << name
+        << std::endl;
+}
+
+double DessertRecipe::calculateCalories() const {
+
+    return ingredients.size() * 100;
 }
