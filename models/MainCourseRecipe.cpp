@@ -10,6 +10,8 @@ void MainCourseRecipe::printInfo() const {
     std::cout
         << "[Main Course] "
         << name
+        << " | Calories: "
+        << calculateCalories()
         << " | Rating: "
         << getRating()
         << std::endl;
@@ -17,5 +19,11 @@ void MainCourseRecipe::printInfo() const {
 
 double MainCourseRecipe::calculateCalories() const {
 
-    return ingredients.size() * 80;
+    double total = 0;
+
+    for (const auto& ing : ingredients) {
+        total += ing.getQuantity() * ing.getCaloriesPerUnit();
+    }
+
+    return total;
 }

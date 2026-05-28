@@ -80,16 +80,21 @@ Recipe* createRecipe() {
 
         string ingredientName;
         double quantity;
+        double calories;
 
         cout << "Ingredient name: ";
         getline(cin, ingredientName);
 
         cout << "Quantity: ";
         cin >> quantity;
+
+        cout << "Calories per unit: ";
+        cin >> calories;
+
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         recipe->addIngredient(
-            Ingredient(ingredientName, quantity)
+            Ingredient(ingredientName, quantity, calories)
         );
     }
 
@@ -268,38 +273,38 @@ int main() {
 
             weeklyPlan.showPlan();
         }
-            else if (choice == 8) {
+        else if (choice == 8) {
 
-        if (recipes.empty()) {
-            cout << "No recipes available." << endl;
-        }
-        else {
-
-            showRecipes(recipes);
-
-            int index;
-            int stars;
-
-            cout << "Choose recipe number: ";
-            cin >> index;
-
-            cout << "Stars (1-5): ";
-            cin >> stars;
-
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            if (index >= 1 &&
-                index <= recipes.size()) {
-
-                recipes[index - 1]->rate(stars);
-
-                cout << "Recipe rated." << endl;
+            if (recipes.empty()) {
+                cout << "No recipes available." << endl;
             }
             else {
-                cout << "Invalid input." << endl;
+
+                showRecipes(recipes);
+
+                int index;
+                int stars;
+
+                cout << "Choose recipe number: ";
+                cin >> index;
+
+                cout << "Stars (1-5): ";
+                cin >> stars;
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                if (index >= 1 &&
+                    index <= recipes.size()) {
+
+                    recipes[index - 1]->rate(stars);
+
+                    cout << "Recipe rated." << endl;
+                }
+                else {
+                    cout << "Invalid input." << endl;
+                }
             }
         }
-    }
 
     } while (choice != 0);
 

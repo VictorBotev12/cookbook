@@ -10,6 +10,8 @@ void DessertRecipe::printInfo() const {
     std::cout
         << "[Dessert] "
         << name
+        << " | Calories: "
+        << calculateCalories()
         << " | Rating: "
         << getRating()
         << std::endl;
@@ -17,5 +19,11 @@ void DessertRecipe::printInfo() const {
 
 double DessertRecipe::calculateCalories() const {
 
-    return ingredients.size() * 100;
+    double total = 0;
+
+    for (const auto& ing : ingredients) {
+        total += ing.getQuantity() * ing.getCaloriesPerUnit();
+    }
+
+    return total;
 }

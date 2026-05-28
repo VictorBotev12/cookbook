@@ -10,6 +10,8 @@ void HealthyRecipe::printInfo() const {
     std::cout
         << "[Healthy] "
         << name
+        << " | Calories: "
+        << calculateCalories()
         << " | Rating: "
         << getRating()
         << std::endl;
@@ -17,5 +19,11 @@ void HealthyRecipe::printInfo() const {
 
 double HealthyRecipe::calculateCalories() const {
 
-    return ingredients.size() * 50;
+    double total = 0;
+
+    for (const auto& ing : ingredients) {
+        total += ing.getQuantity() * ing.getCaloriesPerUnit();
+    }
+
+    return total;
 }
