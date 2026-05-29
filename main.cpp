@@ -228,6 +228,8 @@ void showMenu() {
     cout << "9. Sort Recipes By Name" << endl;
     cout << "10. Sort Recipes By Rating" << endl;
     cout << "11. Sort Recipes By Calories" << endl;
+    cout << "12. Add Favorite Recipe" << endl;
+    cout << "13. Show Favorite Recipes" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -358,9 +360,48 @@ int main() {
             sortRecipesByRating(recipes);
         }
         else if (choice == 11) {
-            
+
             sortRecipesByCalories(recipes);
         }
+        else if (choice == 12) {
+
+            if (recipes.empty()) {
+
+                cout << "No recipes available." << endl;
+            }
+            else {
+
+                showRecipes(recipes);
+
+                int index;
+
+                cout << "Choose recipe number: ";
+                cin >> index;
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                if (index >= 1 &&
+                    index <= recipes.size()) {
+
+                    user.addFavorite(
+                        recipes[index - 1]
+                    );
+
+                    cout
+                        << "Recipe added to favorites."
+                        << endl;
+                }
+                else {
+
+                    cout << "Invalid input." << endl;
+                }
+            }
+        }
+        else if (choice == 13) {
+
+            user.showFavorites();
+        }
+                
 
     } while (choice != 0);
 
