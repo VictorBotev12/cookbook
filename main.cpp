@@ -186,6 +186,19 @@ void sortRecipesByName(vector<Recipe*>& recipes) {
     cout << "Recipes sorted by name." << endl;
 }
 
+void sortRecipesByRating(vector<Recipe*>& recipes) {
+
+    sort(
+        recipes.begin(),
+        recipes.end(),
+        [](Recipe* a, Recipe* b) {
+            return a->getRating() > b->getRating();
+        }
+    );
+
+    cout << "Recipes sorted by rating." << endl;
+}
+
 
 void showMenu() {
 
@@ -200,6 +213,7 @@ void showMenu() {
     cout << "7. Show Weekly Plan" << endl;
     cout << "8. Rate Recipe" << endl;
     cout << "9. Sort Recipes By Name" << endl;
+    cout << "10. Sort Recipes By Rating" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -324,6 +338,10 @@ int main() {
         else if (choice == 9) {
 
             sortRecipesByName(recipes);
+        }
+        else if (choice == 10) {
+
+            sortRecipesByRating(recipes);
         }
 
     } while (choice != 0);
