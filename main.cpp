@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <limits>
@@ -172,6 +173,20 @@ void searchRecipes(const vector<Recipe*>& recipes) {
     }
 }
 
+void sortRecipesByName(vector<Recipe*>& recipes) {
+
+    sort(
+        recipes.begin(),
+        recipes.end(),
+        [](Recipe* a, Recipe* b) {
+            return a->getName() < b->getName();
+        }
+    );
+
+    cout << "Recipes sorted by name." << endl;
+}
+
+
 void showMenu() {
 
     cout << endl;
@@ -184,6 +199,7 @@ void showMenu() {
     cout << "6. Add Recipe to Weekly Plan" << endl;
     cout << "7. Show Weekly Plan" << endl;
     cout << "8. Rate Recipe" << endl;
+    cout << "9. Sort Recipes By Name" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -304,6 +320,10 @@ int main() {
                     cout << "Invalid input." << endl;
                 }
             }
+        }
+        else if (choice == 9) {
+
+            sortRecipesByName(recipes);
         }
 
     } while (choice != 0);
