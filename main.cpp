@@ -230,6 +230,7 @@ void showMenu() {
     cout << "11. Sort Recipes By Calories" << endl;
     cout << "12. Add Favorite Recipe" << endl;
     cout << "13. Show Favorite Recipes" << endl;
+    cout << "14. Remove Favorite Recipe" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -400,6 +401,23 @@ int main() {
         else if (choice == 13) {
 
             user.showFavorites();
+        }
+        else if (choice == 14) {
+
+            user.showFavorites();
+
+            int index;
+
+            cout << "Favorite number to remove: ";
+
+            cin >> index;
+
+            cin.ignore(
+                numeric_limits<streamsize>::max(),
+                '\n'
+            );
+
+            user.removeFavorite(index - 1);
         }
                 
 

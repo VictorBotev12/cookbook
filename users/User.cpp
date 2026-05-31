@@ -34,3 +34,21 @@ void User::showFavorites() const {
             << std::endl;
     }
 }
+
+void User::removeFavorite(int index) {
+
+    if (index < 0 ||
+        index >= favoriteRecipes.size()) {
+
+        std::cout << "Invalid index." << std::endl;
+        return;
+    }
+
+    favoriteRecipes.erase(
+        favoriteRecipes.begin() + index
+    );
+
+    std::cout
+        << "Favorite removed."
+        << std::endl;
+}

@@ -24,5 +24,7 @@ public:
 
     void addFavorite(Recipe* recipe);
 
+    void removeFavorite(int index);
+
     void showFavorites() const;
 };
