@@ -22,3 +22,15 @@ void WeeklyPlan::showPlan() const {
 void WeeklyPlan::generatePlan() {
     std::cout << "Weekly plan generated" << std::endl;
 }
+
+double WeeklyPlan::getWeeklyCalories() const {
+
+    double total = 0;
+
+    for (const DayPlan& day : days) {
+
+        total += day.getTotalCalories();
+    }
+
+    return total;
+}

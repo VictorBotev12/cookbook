@@ -9,4 +9,5 @@ private:
 public:
     void addRecipe(Recipe* recipe);
     void showDay() const;
+    double getTotalCalories() const;
 };

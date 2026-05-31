@@ -11,3 +11,15 @@ void DayPlan::showDay() const {
         std::cout << std::endl;
     }
 }
+
+double DayPlan::getTotalCalories() const {
+
+    double total = 0;
+
+    for (Recipe* recipe : recipes) {
+
+        total += recipe->calculateCalories();
+    }
+
+    return total;
+}

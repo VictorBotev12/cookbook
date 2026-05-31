@@ -14,4 +14,5 @@ public:
     void addRecipeToDay(int day, Recipe* recipe);
     void showPlan() const;
     void generatePlan() override;
+    double getWeeklyCalories() const;
 };

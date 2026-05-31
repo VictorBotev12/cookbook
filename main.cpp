@@ -231,6 +231,7 @@ void showMenu() {
     cout << "12. Add Favorite Recipe" << endl;
     cout << "13. Show Favorite Recipes" << endl;
     cout << "14. Remove Favorite Recipe" << endl;
+    cout << "15. Show Weekly Calories Summary" << endl;
     cout << "0. Exit" << endl;
 }
 
@@ -419,7 +420,14 @@ int main() {
 
             user.removeFavorite(index - 1);
         }
-                
+        
+        else if (choice == 15) {
+
+            cout
+                << "Total weekly calories: "
+                << weeklyPlan.getWeeklyCalories()
+                << endl;
+        }
 
     } while (choice != 0);
 
